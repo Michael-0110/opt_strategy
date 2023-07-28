@@ -12,7 +12,6 @@ hq = Stock_Data_Centre()
 pro = TuShare().pro
 
 # set global param
-global underlying_symbol, is_index, contract_type, start_date, end_date
 underlying_symbol = '510050'
 is_index = False
 contract_type = 'CO'
@@ -30,12 +29,18 @@ def get_trade_dates(underlying_symbol, start_date, end_date):
     :return: # list格式，list中形式为：Timestamp('2023-06-16 00:00:00')
     '''
     
-    ts_prc_his = param_standard(underlying_symbol)['ts_prc_his']
-    ts_prc_his = ts_prc_his[(ts_prc_his['trade_date'] >= start_date.strftime('%Y-%m-%d'))
-                            & (ts_prc_his['trade_date'] <= end_date.strftime('%Y-%m-%d'))]
+    ts_prc_his = param_standard(underlying_symbol)['underlying_prc_his']
+    ts_prc_his = ts_prc_his[(ts_prc_his['trade_date'] >= pd.to_datetime(start_date).strftime('%Y-%m-%d'))
+                            & (ts_prc_his['trade_date'] <= pd.to_datetime(end_date).strftime('%Y-%m-%d'))]
     if start_date <= end_date:
-        dates_info = ts_prc_his['trade_date'].tolist()
+        dates_info = pd.to_datetime(ts_prc_his['trade_date']).tolist()
+        # list格式，list中形式为：Timestamp('2023-06-16 00:00:00')
         return dates_info
+    else:
+        print('起始日期晚于结束日期')
+        return []
+
+# print(get_trade_dates(underlying_symbol, start_date, end_date))
 
 def get_trade_date_gap(underlying_symbol, start_date, end_date):
     '''
@@ -45,5 +50,8 @@ def get_trade_date_gap(underlying_symbol, start_date, end_date):
     :param end_date: 截止日期
     :return: int格式
     '''
-    dates_gap = len(get_trade_date(underlying_symbol, start_date, end_date))
+    dates_gap = len(get_trade_dates(underlying_symbol, start_date, end_date))
     return dates_gap
+
+# print(get_trade_date_gap(underlying_symbol, start_date, end_date))
+
