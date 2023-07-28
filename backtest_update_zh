@@ -1,0 +1,49 @@
+# import
+import pandas as pd
+import numpy as np
+import math
+import datetime
+import matplotlib.pyplot as plt
+from dateutil.relativedelta import relativedelta
+from stock_centre import *
+from scipy.stats import norm
+import plotly.express as px
+hq = Stock_Data_Centre()
+pro = TuShare().pro
+
+# set global param
+global underlying_symbol, is_index, contract_type, start_date, end_date
+underlying_symbol = '510050'
+is_index = False
+contract_type = 'CO'
+start_date = '2022-03-04'
+end_date = '2023-06-19'
+
+# 一、回测前函数定义
+## 交易日函数定义
+def get_trade_dates(underlying_symbol, start_date, end_date):
+    '''
+    获取某标的在指定日期间的交易日序列
+    :param underlying_symbol: 标的代码，仅数字，str格式
+    :param start_date: 开始日期
+    :param end_date: 截止日期
+    :return: # list格式，list中形式为：Timestamp('2023-06-16 00:00:00')
+    '''
+    
+    ts_prc_his = param_standard(underlying_symbol)['ts_prc_his']
+    ts_prc_his = ts_prc_his[(ts_prc_his['trade_date'] >= start_date.strftime('%Y-%m-%d'))
+                            & (ts_prc_his['trade_date'] <= end_date.strftime('%Y-%m-%d'))]
+    if start_date <= end_date:
+        dates_info = ts_prc_his['trade_date'].tolist()
+        return dates_info
+
+def get_trade_date_gap(underlying_symbol, start_date, end_date):
+    '''
+    获取某标的在指定日期间间隔的交易日天数
+    :param underlying_symbol: 标的代码，仅数字，str格式
+    :param start_date: 开始日期
+    :param end_date: 截止日期
+    :return: int格式
+    '''
+    dates_gap = len(get_trade_date(underlying_symbol, start_date, end_date))
+    return dates_gap
