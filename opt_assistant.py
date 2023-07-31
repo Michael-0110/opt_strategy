@@ -39,7 +39,7 @@ class Opt_Assistant():
         if date is not None:
             date = pd.to_datetime(date)
             temp_info = temp_info.query("list_date<=@date<=last_trade_date")
-        temp_info = temp_info[['code', 'underlying_symbol', 'exchange_code', 'contract_unit', 'contract_type', 'exercise_price', 'expire_date']].reset_index(drop=True).sort_values(['exercise_price'], ascending=ascending)
+        temp_info = temp_info.reset_index(drop=True).sort_values(['exercise_price'], ascending=ascending)
         return temp_info
     
     def get_daily_info(self, code, date):
@@ -62,7 +62,7 @@ class Opt_Assistant():
         '''
         temp_info = self.opt_info.query(
             "code==@code")
-        temp_info = temp_info[['code', 'underlying_symbol', 'exchange_code', 'contract_unit', 'contract_type', 'exercise_price', 'expire_date']].reset_index(drop=True)
+        temp_info = temp_info.reset_index(drop=True)
         return temp_info
     
     def check_trading(self, underlying_symbol, date):
@@ -75,8 +75,3 @@ class Opt_Assistant():
             return True
         else: 
             return False
-        
-
-
-
-    
